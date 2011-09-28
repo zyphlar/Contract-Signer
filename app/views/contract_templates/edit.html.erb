@@ -1,0 +1,29 @@
+<!-- TinyMCE -->
+<script type="text/javascript" src="/javascripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+	tinyMCE.init({
+		mode : "textareas",
+		theme : "simple"
+	});
+</script>
+<!-- /TinyMCE -->
+
+<h1>Editing contract_template</h1>
+
+<% form_for(@contract_template) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :boilerplate %><br />
+    <%= f.text_area :boilerplate %>
+  </p>
+  <p>
+    <%= f.submit 'Edit' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', contract_templates_path %>

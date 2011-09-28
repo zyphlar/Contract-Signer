@@ -1,0 +1,24 @@
+<h1>Listing signers</h1>
+
+<table>
+  <tr>
+    <th>First name</th>
+    <th>Last name</th>
+    <th>Cosigner</th>
+  </tr>
+
+<% @signers.each do |signer| %>
+  <tr>
+    <td><%=h signer.first_name %></td>
+    <td><%=h signer.last_name %></td>
+    <td><%=h signer.cosigner %></td>
+    <td><%= link_to 'Show', signer %></td>
+    <td><%= link_to 'Edit', edit_signer_path(signer) %></td>
+    <td><%= link_to 'Destroy', signer, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New signer', new_signer_path %>

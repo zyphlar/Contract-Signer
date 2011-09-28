@@ -1,0 +1,27 @@
+<p>
+  <b>Boilerplate:</b>
+  <%=@contract.boilerplate %>
+</p>
+
+<p>
+  <b>Signature:</b>
+  <img src="<%=@contract.signature %>" />
+</p>
+
+<p>
+  <b>Date Signed:</b>
+  <%=h @contract.datesigned %>
+</p>
+
+<p>
+  <b>Hash:</b>
+  <%=h @contract.signinghash %>
+</p>
+
+<p>
+  <b>Verification:</b>
+  <%=Digest::SHA1.hexdigest @contract.boilerplate+@contract.signature+@contract.datesigned.to_s%>
+</p>
+
+<%= link_to 'Edit', edit_contract_path(@contract) %> |
+<%= link_to 'Back', contracts_path %>

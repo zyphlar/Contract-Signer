@@ -1,0 +1,24 @@
+<h1>Editing contract</h1>
+
+<% form_for(@contract) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :boilerplate %><br />
+    <%= f.text_field :boilerplate %>
+  </p>
+  <p>
+    <%= f.label :signature %><br />
+    <%= f.text_field :signature %>
+  </p>
+  <p>
+    <%= f.label :signinghash %><br />
+    <%= f.text_field :signinghash %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @contract %> |
+<%= link_to 'Back', contracts_path %>

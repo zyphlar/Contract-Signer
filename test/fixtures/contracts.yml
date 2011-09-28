@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  boilerplate: MyString
+  signature: 
+  hash: MyString
+
+two:
+  boilerplate: MyString
+  signature: 
+  hash: MyString

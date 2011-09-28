@@ -1,0 +1,25 @@
+<p>
+  <b>First name:</b>
+  <%=h @signer.first_name %>
+</p>
+
+<p>
+  <b>Last name:</b>
+  <%=h @signer.last_name %>
+</p>
+
+<p>
+  <b>Cosigner:</b>
+  <%=h @signer.cosigner %>
+</p>
+
+<b>Contracts:</b>
+<ul>
+<% @signer.contracts.each do |c| %>
+  <li><%= link_to c.name, contract_path(c) %> (<%= c.datesigned %>)</li>
+<% end %>
+</ul>
+
+
+<%= link_to 'Edit', edit_signer_path(@signer) %> |
+<%= link_to 'Back', signers_path %>

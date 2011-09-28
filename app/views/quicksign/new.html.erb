@@ -1,0 +1,215 @@
+
+
+<script language="javascript">
+function showboiler(id) {
+
+if(id>0) {
+  $.ajax({
+    url: "/contract_templates/"+id+".txt",
+    context: document.body,
+    success: function(data){
+      document.getElementById('boilerdisplay').innerHTML = data;
+      document.getElementById('boilerplateid').value = id;
+    }
+  });
+}
+else {
+  document.getElementById('boilerdisplay').innerHTML = "";
+  document.getElementById('boilerplateid').value = "";
+}
+
+
+}
+function clearme() {
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	context.beginPath();
+}
+</script>
+
+	<style type="text/css">
+	html, body {
+		margin:0;
+		padding:0;
+    font-size: 1.2em;
+    font-family: Arial, Helvetica, sans-serif;
+	}
+	#canvas {
+		border: 1px solid black;
+	}
+  #boilerdisplay {
+    height: 45%;
+    overflow: scroll;
+    font-size: 20pt !important;
+  }
+  input,select {  width: 40%; font-size: 1.2em; }
+  p { margin: 0.2em 0; }
+	</style>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="user-scalable=no, width=device-width" />
+<link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+
+<body id="body">
+
+<% form_for(@contract) do |f| %>
+  <%= f.error_messages %>
+
+  <% f.fields_for :signer do |signer_fields| %>
+  <p>
+    First Name:
+    <%= signer_fields.text_field :first_name %>
+  </p>
+  <p>
+    Last Name:
+    <%= signer_fields.text_field :last_name %>
+  </p>
+  <p>
+    Minor:
+    <%= signer_fields.text_field :cosigner %>
+    (if applicable)
+  </p>
+  <% end %>
+
+
+  <p>
+    <%= f.label :Contract %>
+    <%= select_tag("boilerplate_select", options_for_select(ContractTemplate.all.collect{ |c| [c.name, c.id] }.insert(0, '')), {:onchange => "showboiler(this.value)"}) %>
+  <%= f.hidden_field :signature %>
+  <%= hidden_field_tag :boilerplateid %>
+  </p>
+  <div id="boilerdisplay"></div>
+
+
+
+
+
+
+	<div id="container"> <!-- container. start -->
+		<canvas width="800" height="200" id="canvas">
+		</canvas>
+	</div><!-- container. end -->
+<!--	<p id="debug"></p> -->
+  <p>
+    <input type="button" value="Clear Signature" onclick="clearme()" />    <%= f.submit 'Submit' %>
+  </p>
+
+
+<% end %>
+
+
+<%= link_to 'Back', contracts_path %>
+
+
+
+	<!-- JavaScript  -->
+	<script type="text/javascript" src="/javascripts/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript">
+	var oldX,oldY,sofX,sofY,down=false,drag=false;
+	var q = new Array;
+	var body = document.getElementById("body");
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext('2d');
+//	body.addEventListener("touchmove", touch, false);
+	canvas.addEventListener("touchstart", touchStart, false);
+	canvas.addEventListener("touchmove", touchMove, false);
+	canvas.addEventListener("touchend", drawEnd, false);
+	canvas.addEventListener("touchcancel", drawEnd, false);
+	
+    body.addEventListener('mouseup', drawEnd);
+	canvas.addEventListener('mousedown', mouseDown);
+    canvas.addEventListener('mousemove', mouseMove);
+    canvas.addEventListener('mouseup', drawEnd);
+
+	function touch(event) {
+		// console.log(event);
+		event.preventDefault();
+//		element = document.getElementById("debug");
+//		element.innerHTML = event.touches.length+" touch ("+event.touches[0].pageX+","+event.touches[0].pageY+")("+$(canvas).offset().left+","+$(canvas).offset().top+") down:"+down+" drag:"+drag;
+	}
+
+	function touchStart(event) {
+		touch(event);
+		drawStart([event.touches[0].pageX - $(canvas).offset().left,event.touches[0].pageY - $(canvas).offset().top]);
+	}
+	
+	function mouseDown(event) {
+		drawStart([event.pageX - $(canvas).offset().left,event.pageY - $(canvas).offset().top]);
+//		element = document.getElementById("debug");
+//		element.innerHTML = q.length+" ("+event.pageX+","+event.pageY+")("+$(canvas).offset().left+","+$(canvas).offset().top+") down:"+down+" drag:"+drag;
+	}
+	
+	function drawStart(point) {
+		var x=point[0], y=point[1];
+		q = [point];
+		down = true;
+		context.lineWidth = 1;
+	    context.strokeStyle = '#000000';
+	}
+
+	function touchMove(event) {
+		touch(event);
+		drawMove([event.touches[0].pageX - $(canvas).offset().left,event.touches[0].pageY - $(canvas).offset().top]);
+	};
+	
+	function mouseMove(event) {
+		drawMove([event.pageX - $(canvas).offset().left,event.pageY - $(canvas).offset().top]);
+	}
+	
+	function drawMove(point) {
+		var x=point[0], y=point[1];
+		drag=true;
+		if(down && drag && q.length>=4) {
+			q.push(point);
+			// context.fillRect(q[1][0], q[1][1], 1, 1);
+			// context.fillRect(q[2][0], q[2][1], 1, 1);
+			context.beginPath();
+			context.moveTo(q[0][0], q[0][1]);
+			context.bezierCurveTo(q[1][0], q[1][1], q[2][0], q[2][1], q[3][0], q[3][1]);
+			q.shift();
+			q.shift();
+			q.shift();
+			// context.closePath();
+			context.stroke();
+		} else if(down && drag) {
+			q.push(point);
+		}
+		oldX = x;
+		oldY = y;
+		sofX = oldX;
+		sofY = oldY;
+	}
+
+	// Finished drawing (mouse up)
+	function drawEnd(event) {
+		// touch(event);
+		if(q.length>=2) {
+			if(q.length==4){
+				context.bezierCurveTo(q[1][0], q[1][1], q[2][0], q[2][1], q[3][0], q[3][1]);
+			}
+			if(q.length==3){
+				context.quadraticCurveTo(q[1][0], q[1][1],q[2][0], q[2][1]);
+			}
+			if(q.length==2){
+				context.lineTo(q[1][0], q[1][1]);
+			}
+			context.stroke();
+			q=[];
+		}
+		if(down && drag==false || q.length==1) {
+			// context.fillRect(q[0][0],q[0][1], 2, 2);
+			context.beginPath();
+			context.arc(q[0][0],q[0][1],1,0,Math.PI*2,true);
+			context.closePath();
+			context.stroke();
+			context.fill();
+		}
+		down = false;
+		drag = false;
+
+		// Write the canvas to a data url
+		$("#contract_signature")[0].value = canvas.toDataURL("image/png")
+	}
+
+
+	</script>
+</body>
+</html>
