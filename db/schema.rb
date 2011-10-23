@@ -37,11 +37,4 @@ ActiveRecord::Schema.define(:version => 20110928083830) do
     t.datetime "updated_at"
   end
 
-  create_table "templates", :force => true do |t|
-    t.string   "name"
-    t.string   "boilerplate"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
 end
