@@ -9,17 +9,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111104074044) do
+ActiveRecord::Schema.define(:version => 20111104074505) do
 
   create_table "contract_templates", :force => true do |t|
     t.string   "name"
-    t.text     "boilerplate", :limit => 255
+    t.text     "boilerplate"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "contracts", :force => true do |t|
-    t.text     "boilerplate", :limit => 255
+    t.text     "boilerplate"
     t.binary   "signature"
     t.string   "signinghash"
     t.datetime "datesigned"
