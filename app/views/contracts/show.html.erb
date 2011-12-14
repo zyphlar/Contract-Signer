@@ -1,11 +1,11 @@
 <p>
-  <b>First Name:</b>
+  <b>Name:</b>
   <%= @contract.signer.first_name %>
   <%= @contract.signer.last_name %>
 </p>
 <p>
   <b>Minor:</b>
-  <%= @contract.signer.cosigner %>
+  <%= if @contract.signer.cosigner.blank? then "n/a" else @contract.signer.cosigner end %>
 </p>
 
 <p>
@@ -26,6 +26,7 @@
   <b>Verification:</b>
   <%=Digest::SHA1.hexdigest @contract.boilerplate+@contract.signature+@contract.datesigned.to_s%>
 </p>
-
+<div class="noprint">
 <%= link_to 'Edit', edit_contract_path(@contract) %> |
 <%= link_to 'Back', contracts_path %>
+</div>

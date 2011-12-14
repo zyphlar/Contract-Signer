@@ -35,6 +35,7 @@ class ContractsController < ApplicationController
   # GET /contracts/1/edit
   def edit
     @contract = Contract.find(params[:id])
+    redirect_to(@contract, :notice => 'Contracts cannot be edited.')
   end
 
   # POST /contracts
@@ -80,11 +81,11 @@ class ContractsController < ApplicationController
   # DELETE /contracts/1.xml
   def destroy
     @contract = Contract.find(params[:id])
-    @contract.destroy
+    #@contract.destroy
 
     respond_to do |format|
-      format.html { redirect_to(contracts_url) }
-      format.xml  { head :ok }
+      format.html { redirect_to(@contract, :notice => 'Contracts cannot be deleted.') }
+      format.xml  { render :xml => @contract.errors, :status => :unprocessable_entity }
     end
   end
 end
