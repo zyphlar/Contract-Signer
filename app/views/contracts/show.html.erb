@@ -1,9 +1,6 @@
 <p>
   <b>First Name:</b>
   <%= @contract.signer.first_name %>
-</p>
-<p>
-  <b>Last Name:</b>
   <%= @contract.signer.last_name %>
 </p>
 <p>
@@ -12,26 +9,20 @@
 </p>
 
 <p>
-  <b>Boilerplate:</b>
   <%=@contract.boilerplate %>
 </p>
 
 <p>
-  <b>Signature:</b>
   <img src="<%=@contract.signature %>" />
 </p>
 
 <p>
   <b>Date Signed:</b>
   <%=h @contract.datesigned %>
-</p>
-
-<p>
+<br/>
   <b>Hash:</b>
   <%=h @contract.signinghash %>
-</p>
-
-<p>
+<br/>
   <b>Verification:</b>
   <%=Digest::SHA1.hexdigest @contract.boilerplate+@contract.signature+@contract.datesigned.to_s%>
 </p>
